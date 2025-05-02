@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CISM Domain 1 Quiz</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; max-width: 700px; }
+    .question { font-size: 20px; font-weight: bold; }
+    .choices button { display: block; margin: 10px 0; padding: 10px; width: 100%; font-size: 16px; }
+    .feedback { margin-top: 20px; font-weight: bold; }
+    .correct { color: green; }
+    .incorrect { color: red; }
+    #nextBtn { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
+    .progress { margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+
+<h1>CISM Domain 1 Quiz (Sample)</h1>
+<div class="progress" id="progress"></div>
+<div id="quizContainer">
+  <div class="question" id="question"></div>
+  <div class="choices" id="choices"></div>
+  <div class="feedback" id="feedback"></div>
+  <button id="nextBtn" style="display:none;" onclick="nextQuestion()">Next Question</button>
+</div>
+<div id="result" style="display:none;"></div>
+
+<script>
+const questions = [
+  {
+    question: "What is the PRIMARY goal of an information security governance framework?",
+    choices: [
+      "A. Deploy layered defenses",
+      "B. Align security with business goals",
+      "C. Create a policy library",
+      "D. Configure monitoring tools"
+    ],
+    answer: "B",
+    explanation: "The goal of governance is strategic alignment with business objectives—not just control deployment."
+  },
+  {
+    question: "Who holds ULTIMATE accountability for information security governance?",
+    choices: [
+      "A. CIO",
+      "B. CISO",
+      "C. Security Manager",
+      "D. Executive Management"
+    ],
+    answer: "D",
+    explanation: "Executive management is responsible for strategic oversight and alignment."
+  }
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+function loadQuestion() {
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('nextBtn').style.display = 'none';
+  const q = questions[currentQuestion];
+  document.getElementById('question').textContent = q.question;
+  document.getElementById('progress').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+  const choicesContainer = document.getElementById('choices');
+  choicesContainer.innerHTML = '';
+  q.choices.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.textContent = choice;
+    btn.onclick = () => selectAnswer(choice.charAt(0), q.answer, q.explanation);
+    choicesContainer.appendChild(btn);
+  });
+}
+
+function selectAnswer(selected, correct, explanation) {
+  const feedback = document.getElementById('feedback');
+  if (selected === correct) {
+    feedback.innerHTML = `<span class='correct'>✅ Correct!</span><br>${explanation}`;
+    score++;
+  } else {
+    feedback.innerHTML = `<span class='incorrect'>❌ Incorrect.</span> Correct answer is <b>${correct}</b><br>${explanation}`;
+  }
+  document.getElementById('nextBtn').style.display = 'inline-block';
+}
+
+function nextQuestion() {
+  currentQuestion++;
+  if (currentQuestion < questions.length) {
+    loadQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  document.getElementById('quizContainer').style.display = 'none';
+  const result = document.getElementById('result');
+  result.style.display = 'block';
+  result.innerHTML = `<h2>Quiz Complete</h2><p>Your score: ${score} out of ${questions.length}</p>`;
+}
+
+window.onload = loadQuestion;
+</script>
+</body>
+</html>
